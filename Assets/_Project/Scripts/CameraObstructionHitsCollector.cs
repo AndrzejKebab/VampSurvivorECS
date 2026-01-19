@@ -5,11 +5,7 @@ using Unity.Physics;
 
 namespace AndrzejKebab;
 
-public struct CameraObstructionHitsCollector(
-	Entity                                               followedCharacter,
-	DynamicBuffer<OrbitCameraIgnoredEntityBufferElement> ignoredEntitiesBuffer,
-	float3                                               cameraDirection)
-	: ICollector<ColliderCastHit>
+public struct CameraObstructionHitsCollector : ICollector<ColliderCastHit>
 {
 	public bool  EarlyOutOnFirstHit => false;
 	public float MaxFraction        => 1f;
@@ -17,7 +13,19 @@ public struct CameraObstructionHitsCollector(
 
 	public ColliderCastHit ClosestHit = default;
 
-	private float closestHitFraction = float.MaxValue;
+	private          float                                                closestHitFraction = float.MaxValue;
+	private readonly Entity                                               followedCharacter;
+	private          DynamicBuffer<OrbitCameraIgnoredEntityBufferElement> ignoredEntitiesBuffer;
+	private readonly float3                                               cameraDirection;
+
+	public CameraObstructionHitsCollector(Entity                                               followedCharacter,
+	                                      DynamicBuffer<OrbitCameraIgnoredEntityBufferElement> ignoredEntitiesBuffer,
+	                                      float3                                               cameraDirection)
+	{
+		this.followedCharacter     = followedCharacter;
+		this.ignoredEntitiesBuffer = ignoredEntitiesBuffer;
+		this.cameraDirection       = cameraDirection;
+	}
 
 	public bool AddHit(ColliderCastHit hit)
 	{

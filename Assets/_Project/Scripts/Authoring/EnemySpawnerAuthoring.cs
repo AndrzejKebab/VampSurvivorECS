@@ -5,6 +5,7 @@ using Random = Unity.Mathematics.Random;
 
 namespace AndrzejKebab.Authoring;
 
+[DisallowMultipleComponent]
 public class EnemySpawnerAuthoring : MonoBehaviour
 {
 	public GameObject EnemyPrefab;

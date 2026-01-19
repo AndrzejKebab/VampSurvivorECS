@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace AndrzejKebab.Authoring;
 
+[DisallowMultipleComponent]
 public class PlayerTagAuthoring : MonoBehaviour
 {
 	public class PlayerTagAuthoringBaker : Baker<PlayerTagAuthoring>

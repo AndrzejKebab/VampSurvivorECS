@@ -7,6 +7,7 @@ using Unity.Transforms;
 
 namespace AndrzejKebab.Systems
 {
+    [BurstCompile]
     public partial struct EnemySpawnerSystem : ISystem
     {
         [BurstCompile]
@@ -30,7 +31,7 @@ namespace AndrzejKebab.Systems
             var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
             EntityCommandBuffer.ParallelWriter ecb          = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
 
-            var job = new SpawnEnemyJob
+            var job = new Jobs.SpawnEnemyJob
                       {
                           DeltaTime = SystemAPI.Time.DeltaTime,
                           PlayerPos = playerPos,

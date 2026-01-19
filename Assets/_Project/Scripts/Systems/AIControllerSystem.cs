@@ -35,7 +35,7 @@ namespace AndrzejKebab.Systems
 
             PhysicsWorld physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().PhysicsWorld;
 
-            var job = new AIControlJob
+            var job = new Jobs.AIControlJob
                       {
                           PhysicsWorld    = physicsWorld,
                           CharacterLookup = characterLookup,

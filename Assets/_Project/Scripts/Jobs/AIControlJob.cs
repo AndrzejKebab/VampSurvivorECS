@@ -7,7 +7,7 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
 
-namespace AndrzejKebab
+namespace AndrzejKebab.Jobs
 {
     [BurstCompile]
     public partial struct AIControlJob : IJobEntity

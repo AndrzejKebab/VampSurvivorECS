@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace AndrzejKebab.Authoring;
 
+[DisallowMultipleComponent]
 public class HealthAuthoring : MonoBehaviour
 {
 	public int MaxHealth = 100;

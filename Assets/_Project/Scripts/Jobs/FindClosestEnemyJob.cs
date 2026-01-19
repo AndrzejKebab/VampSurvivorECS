@@ -5,7 +5,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace AndrzejKebab.Systems
+namespace AndrzejKebab.Jobs
 {
 	[BurstCompile]
 	public struct FindClosestEnemyJob : IJob

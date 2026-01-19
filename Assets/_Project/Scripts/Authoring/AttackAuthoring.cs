@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace AndrzejKebab.Authoring;
 
+[DisallowMultipleComponent]
 public class AttackAuthoring : MonoBehaviour
 {
 	public int   AttackDamage = 10;

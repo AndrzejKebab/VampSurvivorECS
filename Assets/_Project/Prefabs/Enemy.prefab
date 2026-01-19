@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 9157210597458408802}
   - component: {fileID: 3863008301291038722}
   - component: {fileID: 7065643171781739585}
+  - component: {fileID: 8225684539123598543}
   - component: {fileID: 6843045452916984554}
   - component: {fileID: 3099134510516867352}
   - component: {fileID: 853175991990890575}
-  - component: {fileID: 1248465290494513710}
   - component: {fileID: 6723333947801093940}
   m_Layer: 0
   m_Name: Enemy
@@ -117,6 +117,66 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8225684539123598543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6120581272352129791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c854a728d43c7cf47bec103607a449f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AndrzejKebab.ThirdPersonCharacterAuthoring
+  CharacterProperties:
+    CustomPhysicsBodyTags:
+      Tag00: 0
+      Tag01: 0
+      Tag02: 0
+      Tag03: 0
+      Tag04: 0
+      Tag05: 0
+      Tag06: 0
+      Tag07: 0
+    InterpolatePosition: 1
+    InterpolateRotation: 0
+    EvaluateGrounding: 1
+    SnapToGround: 1
+    GroundSnappingDistance: 0.5
+    EnhancedGroundPrecision: 0
+    MaxGroundedSlopeAngle: 60
+    DetectMovementCollisions: 1
+    DecollideFromOverlaps: 1
+    ProjectVelocityOnInitialOverlaps: 0
+    MaxContinuousCollisionsIterations: 8
+    MaxOverlapDecollisionIterations: 2
+    DiscardMovementWhenExceedMaxIterations: 1
+    KillVelocityWhenExceedMaxIterations: 1
+    DetectObstructionsForParentBodyMovement: 0
+    SimulateDynamicBody: 1
+    Mass: 1
+  RotationSharpness: 25
+  GroundMaxSpeed: 10
+  GroundedMovementSharpness: 15
+  AirAcceleration: 50
+  AirMaxSpeed: 10
+  AirDrag: 0
+  JumpSpeed: 10
+  Gravity:
+    x: -0
+    y: -30
+    z: -0
+  PreventAirAccelerationAgainstUngroundedHits: 1
+  StepAndSlopeHandling:
+    StepHandling: 0
+    MaxStepHeight: 0.5
+    ExtraStepChecksDistance: 0.1
+    CharacterWidthForStepGroundingCheck: 1
+    PreventGroundingWhenMovingTowardsNoGrounding: 1
+    HasMaxDownwardSlopeChangeAngle: 0
+    MaxDownwardSlopeChangeAngle: 90
+    ConstrainVelocityToGroundPlane: 1
 --- !u!114 &6843045452916984554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,66 +217,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a0e3cf1c133d734aa2e8f4d1ba4e64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AndrzejKebab.EnemyTagAuthoring
---- !u!114 &1248465290494513710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6120581272352129791}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c76e898399084ffc90671056580fa20c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AndrzejKebab.Authoring.CharacterAuthoring
-  CharacterProperties:
-    CustomPhysicsBodyTags:
-      Tag00: 0
-      Tag01: 0
-      Tag02: 0
-      Tag03: 0
-      Tag04: 0
-      Tag05: 0
-      Tag06: 0
-      Tag07: 0
-    InterpolatePosition: 1
-    InterpolateRotation: 0
-    EvaluateGrounding: 1
-    SnapToGround: 1
-    GroundSnappingDistance: 0.5
-    EnhancedGroundPrecision: 0
-    MaxGroundedSlopeAngle: 60
-    DetectMovementCollisions: 1
-    DecollideFromOverlaps: 1
-    ProjectVelocityOnInitialOverlaps: 0
-    MaxContinuousCollisionsIterations: 8
-    MaxOverlapDecollisionIterations: 2
-    DiscardMovementWhenExceedMaxIterations: 1
-    KillVelocityWhenExceedMaxIterations: 1
-    DetectObstructionsForParentBodyMovement: 0
-    SimulateDynamicBody: 1
-    Mass: 1
-  RotationSharpness: 25
-  GroundMaxSpeed: 7.5
-  GroundedMovementSharpness: 15
-  AirAcceleration: 50
-  AirMaxSpeed: 10
-  AirDrag: 0
-  JumpSpeed: 10
-  Gravity:
-    x: -0
-    y: -30
-    z: -0
-  PreventAirAccelerationAgainstUngroundedHits: 1
-  StepAndSlopeHandling:
-    StepHandling: 0
-    MaxStepHeight: 0.5
-    ExtraStepChecksDistance: 0.1
-    CharacterWidthForStepGroundingCheck: 1
-    PreventGroundingWhenMovingTowardsNoGrounding: 1
-    HasMaxDownwardSlopeChangeAngle: 0
-    MaxDownwardSlopeChangeAngle: 90
-    ConstrainVelocityToGroundPlane: 1
 --- !u!114 &6723333947801093940
 MonoBehaviour:
   m_ObjectHideFlags: 0

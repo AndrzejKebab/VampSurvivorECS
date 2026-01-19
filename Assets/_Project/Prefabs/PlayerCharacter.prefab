@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1692896102597148394}
   - component: {fileID: 8041698241194078798}
-  - component: {fileID: 2024672378936777771}
+  - component: {fileID: 9095694816181643038}
   - component: {fileID: 7542772330835976783}
   - component: {fileID: 3679763014561268985}
   - component: {fileID: 3567329404793748860}
@@ -62,7 +62,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &2024672378936777771
+--- !u!114 &9095694816181643038
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -71,9 +71,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1692896102597148395}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c76e898399084ffc90671056580fa20c, type: 3}
+  m_Script: {fileID: 11500000, guid: c854a728d43c7cf47bec103607a449f9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AndrzejKebab.Authoring.CharacterAuthoring
+  m_EditorClassIdentifier: Assembly-CSharp::AndrzejKebab.ThirdPersonCharacterAuthoring
   CharacterProperties:
     CustomPhysicsBodyTags:
       Tag00: 0

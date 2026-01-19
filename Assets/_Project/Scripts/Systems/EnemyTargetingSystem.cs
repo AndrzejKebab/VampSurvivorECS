@@ -8,6 +8,7 @@ namespace AndrzejKebab.Systems
 	[BurstCompile]
 	public partial struct EnemyTargetingSystem : ISystem
 	{
+		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PlayerTag>();

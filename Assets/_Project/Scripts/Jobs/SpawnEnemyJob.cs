@@ -5,7 +5,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace AndrzejKebab.Systems
+namespace AndrzejKebab.Jobs
 {
 	[BurstCompile]
 	public partial struct SpawnEnemyJob : IJobEntity

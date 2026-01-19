@@ -1,14 +1,18 @@
-﻿using Unity.CharacterController;
+﻿using AndrzejKebab.Components;
+using Unity.Burst;
+using Unity.CharacterController;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace AndrzejKebab;
 
+[BurstCompile]
 public static class OrbitCameraUtilities
 {
+	[BurstCompile]
 	public static bool TryGetCameraTargetSimulationWorldTransform(
-		Entity                                   targetCharacterEntity,
+		in Entity                                   targetCharacterEntity,
 		ref ComponentLookup<LocalTransform>      localTransformLookup,
 		ref ComponentLookup<Parent>              parentLookup,
 		ref ComponentLookup<PostTransformMatrix> postTransformMatrixLookup,
@@ -39,8 +43,9 @@ public static class OrbitCameraUtilities
 		return foundValidCameraTarget;
 	}
 
+	[BurstCompile]
 	public static bool TryGetCameraTargetInterpolatedWorldTransform(
-		Entity                            targetCharacterEntity,
+		in Entity                            targetCharacterEntity,
 		ref ComponentLookup<LocalToWorld> localToWorldLookup,
 		ref ComponentLookup<CameraTarget> cameraTargetLookup,
 		out LocalToWorld                  worldTransform)
@@ -58,16 +63,17 @@ public static class OrbitCameraUtilities
 		return foundValidCameraTarget;
 	}
 
-	public static quaternion CalculateCameraRotation(float3 targetUp, float3 planarForward, float pitchAngle)
+	[BurstCompile]
+	public static void CalculateCameraRotation(ref float3 targetUp, ref float3 planarForward, float pitchAngle, out quaternion cameraRotation)
 	{
 		quaternion pitchRotation  = quaternion.Euler(math.right() * math.radians(pitchAngle));
-		quaternion cameraRotation = MathUtilities.CreateRotationWithUpPriority(targetUp, planarForward);
+		cameraRotation = MathUtilities.CreateRotationWithUpPriority(targetUp, planarForward);
 		cameraRotation = math.mul(cameraRotation, pitchRotation);
-		return cameraRotation;
 	}
 
-	public static float3 CalculateCameraPosition(float3 targetPosition, quaternion cameraRotation, float distance)
+	[BurstCompile]
+	public static void CalculateCameraPosition(ref float3 targetPosition, ref quaternion cameraRotation, float distance, out float3 position)
 	{
-		return targetPosition + -MathUtilities.GetForwardFromRotation(cameraRotation) * distance;
+		position = targetPosition + -MathUtilities.GetForwardFromRotation(cameraRotation) * distance;
 	}
 }

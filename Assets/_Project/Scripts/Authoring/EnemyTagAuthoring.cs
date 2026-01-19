@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace AndrzejKebab.Authoring;
 
+[DisallowMultipleComponent]
 public class EnemyTagAuthoring : MonoBehaviour, IComponentData
 {
 	public class Baker : Baker<EnemyTagAuthoring>

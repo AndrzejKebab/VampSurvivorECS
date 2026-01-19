@@ -10,10 +10,10 @@ namespace AndrzejKebab.Jobs
 {
 	[BurstCompile]
 	[WithAll(typeof(Simulate))]
-	public partial struct CharacterPhysicsUpdateJob : IJobEntity, IJobEntityChunkBeginEnd
+	public partial struct ThirdPersonCharacterVariableUpdateJob : IJobEntity, IJobEntityChunkBeginEnd
 	{
-		private ThirdPersonCharacterUpdateContext context;
-		private KinematicCharacterUpdateContext   baseContext;
+		public ThirdPersonCharacterUpdateContext Context;
+		public KinematicCharacterUpdateContext   BaseContext;
 
 		private void Execute(
 			Entity                                           entity,
@@ -45,13 +45,13 @@ namespace AndrzejKebab.Jobs
 				                         CharacterControl   = characterControl
 			                         };
 
-			characterProcessor.PhysicsUpdate(ref context, ref baseContext);
+			characterProcessor.VariableUpdate(ref Context, ref BaseContext);
 		}
 
 		public bool OnChunkBegin(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask,
 		                         in v128           chunkEnabledMask)
 		{
-			baseContext.EnsureCreationOfTmpCollections();
+			BaseContext.EnsureCreationOfTmpCollections();
 			return true;
 		}
 

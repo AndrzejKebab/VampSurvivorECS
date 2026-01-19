@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace AndrzejKebab.Authoring;
 
+[DisallowMultipleComponent]
 public class AIControllerAuthoring : MonoBehaviour
 {
 	[Header("AI Settings")]

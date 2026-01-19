@@ -1,5 +1,6 @@
 using AndrzejKebab.Components;
 using AndrzejKebab.Components.Tags;
+using AndrzejKebab.Jobs;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
