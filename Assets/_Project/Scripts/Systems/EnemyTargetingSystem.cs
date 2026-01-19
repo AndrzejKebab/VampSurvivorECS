@@ -1,5 +1,5 @@
-using AndrzejKebab.Components;
 using AndrzejKebab.Components.Tags;
+using AndrzejKebab.Jobs;
 using Unity.Burst;
 using Unity.Entities;
 
@@ -19,24 +19,14 @@ namespace AndrzejKebab.Systems
 			if (!SystemAPI.HasSingleton<PlayerTag>()) return;
 
 			Entity playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
-
+			var   isPlayerDead = SystemAPI.HasComponent<IsDeadTag>(playerEntity);
+			
 			var job = new SetTargetJob
 			          {
-				          TargetEntity = playerEntity
+				          TargetEntity = isPlayerDead ? Entity.Null : playerEntity
 			          };
 
 			state.Dependency = job.ScheduleParallelByRef(state.Dependency);
-		}
-		
-		[BurstCompile]
-		public partial struct SetTargetJob : IJobEntity
-		{
-			public Entity TargetEntity;
-
-			private void Execute(ref TargetComponent target, in EnemyTag tag)
-			{
-				target.TargetEntity = TargetEntity;
-			}
 		}
 	}
 }

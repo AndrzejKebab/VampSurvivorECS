@@ -1,4 +1,5 @@
 using AndrzejKebab.Components;
+using AndrzejKebab.Components.Tags;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -11,14 +12,20 @@ namespace AndrzejKebab
     [BurstCompile]
     public partial struct AIControlJob : IJobEntity
     {
-        [ReadOnly] public PhysicsWorld PhysicsWorld;
+        [ReadOnly] public PhysicsWorld                                   PhysicsWorld;
         [ReadOnly] public ComponentLookup<ThirdPersonCharacterComponent> CharacterLookup;
         [ReadOnly] public ComponentLookup<AIControllerComponent>         AILookup;
         [ReadOnly] public ComponentLookup<LocalTransform>                TransformLookup;
-
-        private void Execute(ref ThirdPersonCharacterControl control, in AIControllerComponent ai,
+        [ReadOnly] public ComponentLookup<IsDeadTag>                     DeadLookup;
+        
+        private void Execute(Entity entity, ref ThirdPersonCharacterControl control, in AIControllerComponent ai,
                              in  LocalTransform              transform)
         {
+            if (DeadLookup.HasComponent(entity))
+            {
+                control.MoveVector = float3.zero;
+                return;
+            }
             var distanceHits = new NativeList<DistanceHit>(Allocator.Temp);
 
             var hitsCollector = new AllHitsCollector<DistanceHit>(ai.DetectionDistance, ref distanceHits);

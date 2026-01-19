@@ -1,4 +1,5 @@
 using AndrzejKebab.Components;
+using AndrzejKebab.Components.Tags;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Physics;
@@ -10,17 +11,18 @@ namespace AndrzejKebab.Systems
     public partial struct AIControllerSystem : ISystem
     {
         private ComponentLookup<ThirdPersonCharacterComponent> characterLookup;
-        private ComponentLookup<AIControllerComponent> aiLookup;
-        private ComponentLookup<LocalTransform> transformLookup;
+        private ComponentLookup<AIControllerComponent>         aiLookup;
+        private ComponentLookup<LocalTransform>                transformLookup;
+        private ComponentLookup<IsDeadTag>                     deadLookup;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<PhysicsWorldSingleton>();
-            
-            characterLookup = state.GetComponentLookup<ThirdPersonCharacterComponent>(isReadOnly: true);
-            aiLookup = state.GetComponentLookup<AIControllerComponent>(isReadOnly: true);
-            transformLookup = state.GetComponentLookup<LocalTransform>(isReadOnly: true);
+            characterLookup = state.GetComponentLookup<ThirdPersonCharacterComponent>(true);
+            aiLookup        = state.GetComponentLookup<AIControllerComponent>(true);
+            transformLookup = state.GetComponentLookup<LocalTransform>(true);
+            deadLookup      = state.GetComponentLookup<IsDeadTag>(true);
         }
 
         [BurstCompile]
@@ -29,18 +31,20 @@ namespace AndrzejKebab.Systems
             characterLookup.Update(ref state);
             aiLookup.Update(ref state);
             transformLookup.Update(ref state);
+            deadLookup.Update(ref state);
 
             PhysicsWorld physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().PhysicsWorld;
 
             var job = new AIControlJob
-            {
-                PhysicsWorld = physicsWorld,
-                CharacterLookup = characterLookup,
-                AILookup = aiLookup,
-                TransformLookup = transformLookup
-            };
+                      {
+                          PhysicsWorld    = physicsWorld,
+                          CharacterLookup = characterLookup,
+                          AILookup        = aiLookup,
+                          TransformLookup = transformLookup,
+                          DeadLookup      = deadLookup
+                      };
 
-            state.Dependency = job.ScheduleByRef(state.Dependency);
+            state.Dependency = job.ScheduleParallel(state.Dependency);
         }
     }
 }

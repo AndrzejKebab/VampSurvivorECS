@@ -12,14 +12,16 @@ namespace AndrzejKebab.Systems
         private ComponentLookup<HealthComponent> healthLookup;
         private ComponentLookup<LocalTransform>  transformLookup;
         private ComponentLookup<PlayerTag>       playerTagLookup;
+        private ComponentLookup<IsDeadTag>       isDeadLookup;
         
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
-            healthLookup     = state.GetComponentLookup<HealthComponent>(isReadOnly: false);
-            transformLookup  = state.GetComponentLookup<LocalTransform>(isReadOnly: true);
+            healthLookup    = state.GetComponentLookup<HealthComponent>(isReadOnly: false);
+            transformLookup = state.GetComponentLookup<LocalTransform>(isReadOnly: true);
             playerTagLookup = state.GetComponentLookup<PlayerTag>(isReadOnly: true);
+            isDeadLookup   = state.GetComponentLookup<IsDeadTag>(isReadOnly: true);
         }
 
         [BurstCompile]
@@ -28,6 +30,7 @@ namespace AndrzejKebab.Systems
             healthLookup.Update(ref state);
             transformLookup.Update(ref state);
             playerTagLookup.Update(ref state);
+            isDeadLookup.Update(ref state);
 
             var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
             EntityCommandBuffer ecb          = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
@@ -38,6 +41,7 @@ namespace AndrzejKebab.Systems
                           HealthLookup    = healthLookup,
                           TransformLookup = transformLookup,
                           PlayerTagLookup = playerTagLookup,
+                          IsDeadLookup    = isDeadLookup,
                           Ecb             = ecb
                       };
 

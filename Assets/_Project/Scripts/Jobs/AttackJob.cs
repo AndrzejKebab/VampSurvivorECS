@@ -15,23 +15,25 @@ namespace AndrzejKebab.Jobs
         [ReadOnly] public float                            DeltaTime;
         [ReadOnly] public ComponentLookup<LocalTransform>  TransformLookup;
         [ReadOnly] public ComponentLookup<PlayerTag>       PlayerTagLookup;
+        [ReadOnly] public ComponentLookup<IsDeadTag>       IsDeadLookup;
         public            ComponentLookup<HealthComponent> HealthLookup;
-
         public EntityCommandBuffer Ecb;
 
-        private void Execute(ref AttackComponent attack, in TargetComponent targetComp, in LocalTransform myTransform)
+        private void Execute(Entity entity, ref AttackComponent attack, in TargetComponent targetComp, in LocalTransform myTransform)
         {
-            attack.TimeSinceLastAttack += DeltaTime;
+            if (IsDeadLookup.HasComponent(entity)) return;
             Entity targetEntity = targetComp.TargetEntity;
 
             if (targetEntity == Entity.Null) return;
             if (!HealthLookup.HasComponent(targetEntity)) return;
             if (!TransformLookup.HasComponent(targetEntity)) return;
-
+            if (IsDeadLookup.HasComponent(targetEntity)) return;
+            
             float3 targetPos = TransformLookup[targetEntity].Position;
             var distSq = math.distancesq(myTransform.Position, targetPos);
             var rangeSq = attack.AttackRange * attack.AttackRange;
             var delay = 1.0f / attack.AttackSpeed;
+            attack.TimeSinceLastAttack += DeltaTime;
 
             if (!(distSq <= rangeSq) || !(attack.TimeSinceLastAttack >= delay)) return;
             
