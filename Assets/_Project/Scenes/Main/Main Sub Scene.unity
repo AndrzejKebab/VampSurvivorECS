@@ -786,6 +786,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7568817337597995143, guid: 492a184cc1501fe4da86d69b5eddc366, type: 3}
+      propertyPath: IgnoredEntities.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7568817337597995143, guid: 492a184cc1501fe4da86d69b5eddc366, type: 3}
+      propertyPath: 'IgnoredEntities.Array.data[0]'
+      value: 
+      objectReference: {fileID: 6120581272352129791, guid: 8e60967dfb7c62f44b2bce8639797691, type: 3}
+    - target: {fileID: 7568817337597995143, guid: 492a184cc1501fe4da86d69b5eddc366, type: 3}
+      propertyPath: 'IgnoredEntities.Array.data[1]'
+      value: 
+      objectReference: {fileID: 6120581272352129791, guid: 8e60967dfb7c62f44b2bce8639797691, type: 3}
     - target: {fileID: 7568817337597995144, guid: 492a184cc1501fe4da86d69b5eddc366, type: 3}
       propertyPath: m_Name
       value: OrbitCamera

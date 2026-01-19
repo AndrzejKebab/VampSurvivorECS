@@ -10,9 +10,9 @@ namespace AndrzejKebab.Jobs
 	[BurstCompile]
 	public partial struct SpawnEnemyJob : IJobEntity
 	{
-		[ReadOnly] public float  DeltaTime;
+		[ReadOnly]  public float  DeltaTime;
+		[ReadOnly]  public Entity CameraEntity;
 		[WriteOnly] public float3 PlayerPos;
-
 		[WriteOnly] public EntityCommandBuffer.ParallelWriter Ecb;
 
 		private void Execute([EntityIndexInQuery] int sortKey, ref EnemySpawnerComponent spawner)
@@ -33,6 +33,11 @@ namespace AndrzejKebab.Jobs
 			float3 spawnPos = PlayerPos + new float3(x, 0, z);
 
 			Ecb.SetComponent(sortKey, newEnemy, LocalTransform.FromPosition(spawnPos));
+			
+			Ecb.AppendToBuffer(sortKey, CameraEntity, new CameraIgnoredEntityBufferElement
+			                                          {
+				                                          Entity = newEnemy
+			                                          });
 		}
 	}	
 }
