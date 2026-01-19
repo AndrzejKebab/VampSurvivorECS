@@ -4,6 +4,10 @@ A high-performance "Survivor-like" game built on **Unity 6** using the **Data-Or
 
 This project demonstrates a ECS architecture handling thousands of active units. It leverages the **Unity Character Controller** package for robust kinematic movement and utilizes **ZLinq** and **Burst** for optimized data processing. The architecture strictly follows an **MVC pattern**, separating Input/AI "Brains" from the core Physics "Engine."
 
+
+https://github.com/user-attachments/assets/af5f7427-7864-4e3a-a035-04b380274632
+
+
 ---
 
 ## 🚀 Key Features
