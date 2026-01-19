@@ -1,4 +1,5 @@
 using AndrzejKebab.Components;
+using AndrzejKebab.Components.Tags;
 using Unity.Entities;
 using UnityEngine;
 

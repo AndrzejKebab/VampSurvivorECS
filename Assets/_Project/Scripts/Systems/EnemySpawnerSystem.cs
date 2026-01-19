@@ -1,4 +1,5 @@
 using AndrzejKebab.Components;
+using AndrzejKebab.Components.Tags;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -21,6 +22,9 @@ namespace AndrzejKebab.Systems
             if (!SystemAPI.HasSingleton<PlayerTag>()) return;
 
             Entity playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
+            
+            if (SystemAPI.HasComponent<IsDeadTag>(playerEntity)) return;
+            
             float3 playerPos    = SystemAPI.GetComponent<LocalTransform>(playerEntity).Position;
 
             var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();

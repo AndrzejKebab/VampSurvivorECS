@@ -1,20 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using AndrzejKebab.Components;
+using AndrzejKebab.Components.Tags;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Physics;
 using Unity.Transforms;
 
-namespace AndrzejKebab
+namespace AndrzejKebab.Jobs
 {
     [BurstCompile]
     public partial struct AttackJob : IJobEntity
     {
-        [ReadOnly] public float DeltaTime;
-        [ReadOnly] public ComponentLookup<LocalTransform> TransformLookup;
-        public ComponentLookup<HealthComponent> HealthLookup;
+        [ReadOnly] public float                            DeltaTime;
+        [ReadOnly] public ComponentLookup<LocalTransform>  TransformLookup;
+        [ReadOnly] public ComponentLookup<PlayerTag>       PlayerTagLookup;
+        public            ComponentLookup<HealthComponent> HealthLookup;
 
         public EntityCommandBuffer Ecb;
 
@@ -39,7 +40,13 @@ namespace AndrzejKebab
             healthData.CurrentHealth -= attack.AttackDamage;
             HealthLookup[targetEntity] = healthData;
 
-            if (healthData.CurrentHealth <= 0)
+            if (healthData.CurrentHealth > 0) return;
+            if (PlayerTagLookup.HasComponent(targetEntity))
+            {
+                Ecb.AddComponent<IsDeadTag>(targetEntity);
+                Ecb.RemoveComponent<PhysicsCollider>(targetEntity);
+            }
+            else
             {
                 Ecb.DestroyEntity(targetEntity);
             }
