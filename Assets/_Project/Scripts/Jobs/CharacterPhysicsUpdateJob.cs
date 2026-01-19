@@ -12,8 +12,8 @@ namespace AndrzejKebab.Jobs
 	[WithAll(typeof(Simulate))]
 	public partial struct CharacterPhysicsUpdateJob : IJobEntity, IJobEntityChunkBeginEnd
 	{
-		private ThirdPersonCharacterUpdateContext context;
-		private KinematicCharacterUpdateContext   baseContext;
+		public CharacterUpdateContext Context;
+		public KinematicCharacterUpdateContext   BaseContext;
 
 		private void Execute(
 			Entity                                           entity,
@@ -21,16 +21,17 @@ namespace AndrzejKebab.Jobs
 			RefRW<KinematicCharacterProperties>              characterProperties,
 			RefRW<KinematicCharacterBody>                    characterBody,
 			RefRW<PhysicsCollider>                           physicsCollider,
-			RefRW<ThirdPersonCharacterComponent>             characterComponent,
-			RefRW<ThirdPersonCharacterControl>               characterControl,
+			RefRW<CharacterComponent>                        characterComponent,
+			RefRW<CharacterControlComponent>                          characterControl,
 			DynamicBuffer<KinematicCharacterHit>             characterHitsBuffer,
 			DynamicBuffer<StatefulKinematicCharacterHit>     statefulHitsBuffer,
 			DynamicBuffer<KinematicCharacterDeferredImpulse> deferredImpulsesBuffer,
 			DynamicBuffer<KinematicVelocityProjectionHit>    velocityProjectionHits)
 		{
-			var characterProcessor = new ThirdPersonCharacterProcessor
+			var characterProcessor = new CharacterProcessor()
 			                         {
 				                         CharacterDataAccess = new KinematicCharacterDataAccess(
+
 					                          entity,
 					                          localTransform,
 					                          characterProperties,
@@ -45,13 +46,13 @@ namespace AndrzejKebab.Jobs
 				                         CharacterControl   = characterControl
 			                         };
 
-			characterProcessor.PhysicsUpdate(ref context, ref baseContext);
+			characterProcessor.PhysicsUpdate(ref Context, ref BaseContext);
 		}
 
 		public bool OnChunkBegin(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask,
 		                         in v128           chunkEnabledMask)
 		{
-			baseContext.EnsureCreationOfTmpCollections();
+			BaseContext.EnsureCreationOfTmpCollections();
 			return true;
 		}
 

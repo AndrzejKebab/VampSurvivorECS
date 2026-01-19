@@ -5,7 +5,7 @@ using Unity.Mathematics;
 namespace AndrzejKebab.Components;
 
 [Serializable]
-public struct OrbitCameraComponent : IComponentData
+public struct CameraComponent : IComponentData
 {
 	public float RotationSpeed;
 	public float MaxVAngle;

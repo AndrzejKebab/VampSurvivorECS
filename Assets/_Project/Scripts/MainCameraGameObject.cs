@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace AndrzejKebab;
 
-public class MainGameObjectCamera : MonoBehaviour
+public class MainCameraGameObject : MonoBehaviour
 {
     public static Camera Instance;
 

@@ -5,7 +5,7 @@ using Unity.Mathematics;
 namespace AndrzejKebab.Components;
 
 [Serializable]
-public struct ThirdPersonPlayerInputs : IComponentData
+public struct PlayerInputsComponent : IComponentData
 {
 	public float2          MoveInput;
 	public float2          CameraLookInput;

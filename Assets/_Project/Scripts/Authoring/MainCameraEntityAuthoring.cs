@@ -5,14 +5,14 @@ using UnityEngine;
 namespace AndrzejKebab.Authoring;
 
 [DisallowMultipleComponent]
-public class MainEntityCameraAuthoring : MonoBehaviour
+public class MainCameraEntityAuthoring : MonoBehaviour
 {
-    public class Baker : Baker<MainEntityCameraAuthoring>
+    public class Baker : Baker<MainCameraEntityAuthoring>
     {
-        public override void Bake(MainEntityCameraAuthoring authoring)
+        public override void Bake(MainCameraEntityAuthoring authoring)
         {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent<MainEntityCamera>(entity);
+            AddComponent<MainCameraEntityTag>(entity);
         }
     }
 }

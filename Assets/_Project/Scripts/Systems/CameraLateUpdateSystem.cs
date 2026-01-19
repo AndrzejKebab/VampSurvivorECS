@@ -10,13 +10,13 @@ namespace AndrzejKebab.Systems
 	[UpdateInGroup(typeof(SimulationSystemGroup))]
 	[UpdateAfter(typeof(TransformSystemGroup))]
 	[BurstCompile]
-	public partial struct OrbitCameraLateUpdateSystem : ISystem
+	public partial struct CameraLateUpdateSystem : ISystem
 	{
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldSingleton>();
-			state.RequireForUpdate(SystemAPI.QueryBuilder().WithAll<OrbitCameraComponent, OrbitCameraControl>().Build());
+			state.RequireForUpdate(SystemAPI.QueryBuilder().WithAll<CameraComponent, CameraControlComponent>().Build());
 		}
 
 		[BurstCompile]
@@ -27,7 +27,7 @@ namespace AndrzejKebab.Systems
 				          DeltaTime                    = SystemAPI.Time.DeltaTime,
 				          PhysicsWorld                 = SystemAPI.GetSingleton<PhysicsWorldSingleton>().PhysicsWorld,
 				          LocalToWorldLookup           = SystemAPI.GetComponentLookup<LocalToWorld>(),
-				          CameraTargetLookup           = SystemAPI.GetComponentLookup<CameraTarget>(true),
+				          CameraTargetLookup           = SystemAPI.GetComponentLookup<CameraTargetComponent>(true),
 				          KinematicCharacterBodyLookup = SystemAPI.GetComponentLookup<KinematicCharacterBody>(true)
 			          };
 			job.Schedule();

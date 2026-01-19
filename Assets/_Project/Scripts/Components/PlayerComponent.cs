@@ -4,7 +4,7 @@ using Unity.Entities;
 namespace AndrzejKebab.Components;
 
 [Serializable]
-public struct ThirdPersonPlayer : IComponentData
+public struct PlayerComponent : IComponentData
 {
     public Entity ControlledCharacter;
     public Entity ControlledCamera;

@@ -10,7 +10,7 @@ namespace AndrzejKebab.Systems
     [BurstCompile]
     public partial struct AIControllerSystem : ISystem
     {
-        private ComponentLookup<ThirdPersonCharacterComponent> characterLookup;
+        private ComponentLookup<CharacterComponent> characterLookup;
         private ComponentLookup<AIControllerComponent>         aiLookup;
         private ComponentLookup<LocalTransform>                transformLookup;
         private ComponentLookup<IsDeadTag>                     deadLookup;
@@ -19,7 +19,7 @@ namespace AndrzejKebab.Systems
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<PhysicsWorldSingleton>();
-            characterLookup = state.GetComponentLookup<ThirdPersonCharacterComponent>(true);
+            characterLookup = state.GetComponentLookup<CharacterComponent>(true);
             aiLookup        = state.GetComponentLookup<AIControllerComponent>(true);
             transformLookup = state.GetComponentLookup<LocalTransform>(true);
             deadLookup      = state.GetComponentLookup<IsDeadTag>(true);

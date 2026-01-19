@@ -10,22 +10,22 @@ namespace AndrzejKebab.Systems
 	[UpdateInGroup(typeof(SimulationSystemGroup))]
 	[UpdateAfter(typeof(FixedStepSimulationSystemGroup))]
 	[BurstCompile]
-	public partial struct ThirdPersonPlayerVariableStepControlSystem : ISystem
+	public partial struct PlayerVariableStepControlSystem : ISystem
 	{
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate(SystemAPI.QueryBuilder().WithAll<ThirdPersonPlayer, ThirdPersonPlayerInputs>().Build());
+			state.RequireForUpdate(SystemAPI.QueryBuilder().WithAll<PlayerComponent, PlayerInputsComponent>().Build());
 		}
 
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			foreach ((RefRO<ThirdPersonPlayerInputs> playerInputs, RefRO<ThirdPersonPlayer> player) in SystemAPI
-				         .Query<RefRO<ThirdPersonPlayerInputs>, RefRO<ThirdPersonPlayer>>().WithAll<Simulate>())
-				if (SystemAPI.HasComponent<OrbitCameraControl>(player.ValueRO.ControlledCamera))
+			foreach ((RefRO<PlayerInputsComponent> playerInputs, RefRO<PlayerComponent> player) in SystemAPI
+				         .Query<RefRO<PlayerInputsComponent>, RefRO<PlayerComponent>>().WithAll<Simulate>())
+				if (SystemAPI.HasComponent<CameraControlComponent>(player.ValueRO.ControlledCamera))
 				{
-					var cameraControl = SystemAPI.GetComponent<OrbitCameraControl>(player.ValueRO.ControlledCamera);
+					var cameraControl = SystemAPI.GetComponent<CameraControlComponent>(player.ValueRO.ControlledCamera);
 
 					cameraControl.FollowedCharacterEntity = player.ValueRO.ControlledCharacter;
 					cameraControl.LookDegreesDelta        = playerInputs.ValueRO.CameraLookInput;

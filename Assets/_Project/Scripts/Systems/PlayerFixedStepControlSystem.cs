@@ -15,28 +15,28 @@ namespace AndrzejKebab.Systems
 	/// </summary>
 	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderFirst = true)]
 	[BurstCompile]
-	public partial struct ThirdPersonPlayerFixedStepControlSystem : ISystem
+	public partial struct PlayerFixedStepControlSystem : ISystem
 	{
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<Systems.FixedTickSystem.Singleton>();
-			state.RequireForUpdate(SystemAPI.QueryBuilder().WithAll<ThirdPersonPlayer, ThirdPersonPlayerInputs>()
+			state.RequireForUpdate<FixedTickSystem.Singleton>();
+			state.RequireForUpdate(SystemAPI.QueryBuilder().WithAll<PlayerComponent, PlayerInputsComponent>()
 			                                .WithNone<IsDeadTag>().Build());
 		}
 
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			var tick = SystemAPI.GetSingleton<Systems.FixedTickSystem.Singleton>().Tick;
+			var tick = SystemAPI.GetSingleton<FixedTickSystem.Singleton>().Tick;
 
-			foreach ((RefRO<ThirdPersonPlayerInputs> playerInputs, RefRO<ThirdPersonPlayer> player) in SystemAPI
-				         .Query<RefRO<ThirdPersonPlayerInputs>, RefRO<ThirdPersonPlayer>>().WithAll<Simulate>()
+			foreach ((RefRO<PlayerInputsComponent> playerInputs, RefRO<PlayerComponent> player) in SystemAPI
+				         .Query<RefRO<PlayerInputsComponent>, RefRO<PlayerComponent>>().WithAll<Simulate>()
 				         .WithNone<IsDeadTag>())
-				if (SystemAPI.HasComponent<ThirdPersonCharacterControl>(player.ValueRO.ControlledCharacter))
+				if (SystemAPI.HasComponent<CharacterControlComponent>(player.ValueRO.ControlledCharacter))
 				{
 					var characterControl =
-						SystemAPI.GetComponent<ThirdPersonCharacterControl>(player.ValueRO.ControlledCharacter);
+						SystemAPI.GetComponent<CharacterControlComponent>(player.ValueRO.ControlledCharacter);
 
 					float3 characterUp =
 						MathUtilities.GetUpFromRotation(SystemAPI
@@ -46,13 +46,13 @@ namespace AndrzejKebab.Systems
 
 					// Get camera rotation, since our movement is relative to it.
 					quaternion cameraRotation = quaternion.identity;
-					if (SystemAPI.HasComponent<OrbitCameraComponent>(player.ValueRO.ControlledCamera))
+					if (SystemAPI.HasComponent<CameraComponent>(player.ValueRO.ControlledCamera))
 					{
 						// Camera rotation is calculated rather than gotten from transform, because this allows us to
 						// reduce the size of the camera ghost state in a netcode prediction context.
 						// If not using netcode prediction, we could simply get rotation from transform here instead.
-						var orbitCamera = SystemAPI.GetComponent<OrbitCameraComponent>(player.ValueRO.ControlledCamera);
-						OrbitCameraUtilities.CalculateCameraRotation(ref characterUp, ref orbitCamera.PlanarForward,
+						var orbitCamera = SystemAPI.GetComponent<CameraComponent>(player.ValueRO.ControlledCamera);
+						CameraUtilities.CalculateCameraRotation(ref characterUp, ref orbitCamera.PlanarForward,
 							                                             orbitCamera.PitchAngle, out cameraRotation);
 					}
 

@@ -4,6 +4,6 @@ using Unity.Entities;
 namespace AndrzejKebab.Components;
 
 [Serializable]
-public struct MainEntityCamera : IComponentData
+public struct MainCameraEntityTag : IComponentData
 {
 }

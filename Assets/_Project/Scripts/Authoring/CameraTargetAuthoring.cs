@@ -14,7 +14,7 @@ public class CameraTargetAuthoring : MonoBehaviour
         public override void Bake(CameraTargetAuthoring authoring)
         {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new CameraTarget
+            AddComponent(entity, new CameraTargetComponent
                                  {
                                      TargetEntity = GetEntity(authoring.Target, TransformUsageFlags.Dynamic),
                                  });

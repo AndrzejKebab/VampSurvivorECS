@@ -9,13 +9,13 @@ namespace AndrzejKebab.Systems
 {
 	[UpdateInGroup(typeof(SimulationSystemGroup))]
 	[UpdateAfter(typeof(FixedStepSimulationSystemGroup))]
-	[UpdateAfter(typeof(ThirdPersonPlayerVariableStepControlSystem))]
+	[UpdateAfter(typeof(PlayerVariableStepControlSystem))]
 	[UpdateBefore(typeof(TransformSystemGroup))]
 	[BurstCompile]
-	public partial struct ThirdPersonCharacterVariableUpdateSystem : ISystem
+	public partial struct CharacterVariableUpdateSystem : ISystem
 	{
 		private EntityQuery                       characterQuery;
-		private ThirdPersonCharacterUpdateContext context;
+		private CharacterUpdateContext context;
 		private KinematicCharacterUpdateContext   baseContext;
 
 		[BurstCompile]
@@ -24,11 +24,11 @@ namespace AndrzejKebab.Systems
 			state.RequireForUpdate<PhysicsWorldSingleton>();
 			characterQuery = KinematicCharacterUtilities.GetBaseCharacterQueryBuilder()
 			                                            .WithAll<
-				                                            ThirdPersonCharacterComponent,
-				                                            ThirdPersonCharacterControl>()
+				                                            CharacterComponent,
+				                                            CharacterControlComponent>()
 			                                            .Build(ref state);
 
-			context = new ThirdPersonCharacterUpdateContext();
+			context = new CharacterUpdateContext();
 			context.OnSystemCreate(ref state);
 			baseContext = new KinematicCharacterUpdateContext();
 			baseContext.OnSystemCreate(ref state);
@@ -42,7 +42,7 @@ namespace AndrzejKebab.Systems
 			context.OnSystemUpdate(ref state);
 			baseContext.OnSystemUpdate(ref state, SystemAPI.Time, SystemAPI.GetSingleton<PhysicsWorldSingleton>());
 
-			var job = new Jobs.ThirdPersonCharacterVariableUpdateJob
+			var job = new Jobs.CharacterVariableUpdateJob
 			          {
 				          Context     = context,
 				          BaseContext = baseContext

@@ -10,10 +10,10 @@ namespace AndrzejKebab.Systems
 	{
 		protected override void OnUpdate()
 		{
-			if (MainGameObjectCamera.Instance == null || !SystemAPI.HasSingleton<MainEntityCamera>()) return;
-			Entity       mainEntityCameraEntity = SystemAPI.GetSingletonEntity<MainEntityCamera>();
+			if (MainCameraGameObject.Instance == null || !SystemAPI.HasSingleton<MainCameraEntityTag>()) return;
+			Entity       mainEntityCameraEntity = SystemAPI.GetSingletonEntity<MainCameraEntityTag>();
 			var targetLocalToWorld     = SystemAPI.GetComponent<LocalToWorld>(mainEntityCameraEntity);
-			MainGameObjectCamera.Instance.transform.SetPositionAndRotation(targetLocalToWorld.Position, targetLocalToWorld.Rotation);
+			MainCameraGameObject.Instance.transform.SetPositionAndRotation(targetLocalToWorld.Position, targetLocalToWorld.Rotation);
 		}
 	}
 }

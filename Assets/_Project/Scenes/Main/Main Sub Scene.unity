@@ -496,6 +496,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: ThirdPersonCharacter
       objectReference: {fileID: 0}
+    - target: {fileID: 3567329404793748860, guid: 5fbcc801dea8fd640a004697d22ed448, type: 3}
+      propertyPath: MaxHealth
+      value: 100000
+      objectReference: {fileID: 0}
+    - target: {fileID: 3679763014561268985, guid: 5fbcc801dea8fd640a004697d22ed448, type: 3}
+      propertyPath: AttackSpeed
+      value: 25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

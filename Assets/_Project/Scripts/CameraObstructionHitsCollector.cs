@@ -15,11 +15,11 @@ public struct CameraObstructionHitsCollector : ICollector<ColliderCastHit>
 
 	private          float                                                closestHitFraction = float.MaxValue;
 	private readonly Entity                                               followedCharacter;
-	private          DynamicBuffer<OrbitCameraIgnoredEntityBufferElement> ignoredEntitiesBuffer;
+	private          DynamicBuffer<CameraIgnoredEntityBufferElement> ignoredEntitiesBuffer;
 	private readonly float3                                               cameraDirection;
 
 	public CameraObstructionHitsCollector(Entity                                               followedCharacter,
-	                                      DynamicBuffer<OrbitCameraIgnoredEntityBufferElement> ignoredEntitiesBuffer,
+	                                      DynamicBuffer<CameraIgnoredEntityBufferElement> ignoredEntitiesBuffer,
 	                                      float3                                               cameraDirection)
 	{
 		this.followedCharacter     = followedCharacter;

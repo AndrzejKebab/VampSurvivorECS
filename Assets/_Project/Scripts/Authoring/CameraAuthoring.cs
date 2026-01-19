@@ -7,7 +7,7 @@ using UnityEngine;
 namespace AndrzejKebab.Authoring;
 
 [DisallowMultipleComponent]
-public class OrbitCameraAuthoring : MonoBehaviour
+public class CameraAuthoring : MonoBehaviour
 {
     [Header("Rotation")]
     public float RotationSpeed = 2f;
@@ -31,13 +31,13 @@ public class OrbitCameraAuthoring : MonoBehaviour
     [Header("Misc")]
     public List<GameObject> IgnoredEntities = new ();
 
-    public class Baker : Baker<OrbitCameraAuthoring>
+    public class Baker : Baker<CameraAuthoring>
     {
-        public override void Bake(OrbitCameraAuthoring authoring)
+        public override void Bake(CameraAuthoring authoring)
         {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic | TransformUsageFlags.WorldSpace);
 
-            AddComponent(entity, new OrbitCameraComponent
+            AddComponent(entity, new CameraComponent
                                  {
                                      RotationSpeed             = authoring.RotationSpeed,
                                      MaxVAngle                 = authoring.MaxVAngle,
@@ -62,12 +62,12 @@ public class OrbitCameraAuthoring : MonoBehaviour
                                      PlanarForward = -math.forward(),
                                  });
 
-            AddComponent(entity, new OrbitCameraControl());
+            AddComponent(entity, new CameraControlComponent());
 
-            DynamicBuffer<OrbitCameraIgnoredEntityBufferElement> ignoredEntitiesBuffer = AddBuffer<OrbitCameraIgnoredEntityBufferElement>(entity);
+            DynamicBuffer<CameraIgnoredEntityBufferElement> ignoredEntitiesBuffer = AddBuffer<CameraIgnoredEntityBufferElement>(entity);
             foreach (GameObject t in authoring.IgnoredEntities)
             {
-                ignoredEntitiesBuffer.Add(new OrbitCameraIgnoredEntityBufferElement
+                ignoredEntitiesBuffer.Add(new CameraIgnoredEntityBufferElement
                                           {
                                               Entity = GetEntity(t, TransformUsageFlags.None),
                                           });

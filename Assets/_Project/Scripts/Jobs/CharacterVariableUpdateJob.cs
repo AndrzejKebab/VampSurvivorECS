@@ -10,9 +10,9 @@ namespace AndrzejKebab.Jobs
 {
 	[BurstCompile]
 	[WithAll(typeof(Simulate))]
-	public partial struct ThirdPersonCharacterVariableUpdateJob : IJobEntity, IJobEntityChunkBeginEnd
+	public partial struct CharacterVariableUpdateJob : IJobEntity, IJobEntityChunkBeginEnd
 	{
-		public ThirdPersonCharacterUpdateContext Context;
+		public CharacterUpdateContext Context;
 		public KinematicCharacterUpdateContext   BaseContext;
 
 		private void Execute(
@@ -21,14 +21,14 @@ namespace AndrzejKebab.Jobs
 			RefRW<KinematicCharacterProperties>              characterProperties,
 			RefRW<KinematicCharacterBody>                    characterBody,
 			RefRW<PhysicsCollider>                           physicsCollider,
-			RefRW<ThirdPersonCharacterComponent>             characterComponent,
-			RefRW<ThirdPersonCharacterControl>               characterControl,
+			RefRW<CharacterComponent>             characterComponent,
+			RefRW<CharacterControlComponent>               characterControl,
 			DynamicBuffer<KinematicCharacterHit>             characterHitsBuffer,
 			DynamicBuffer<StatefulKinematicCharacterHit>     statefulHitsBuffer,
 			DynamicBuffer<KinematicCharacterDeferredImpulse> deferredImpulsesBuffer,
 			DynamicBuffer<KinematicVelocityProjectionHit>    velocityProjectionHits)
 		{
-			var characterProcessor = new ThirdPersonCharacterProcessor
+			var characterProcessor = new CharacterProcessor
 			                         {
 				                         CharacterDataAccess = new KinematicCharacterDataAccess(
 					                          entity,

@@ -17,33 +17,33 @@ namespace AndrzejKebab.Jobs
 		[ReadOnly] public PhysicsWorld PhysicsWorld;
 
 		public            ComponentLookup<LocalToWorld>           LocalToWorldLookup;
-		[ReadOnly] public ComponentLookup<CameraTarget>           CameraTargetLookup;
+		[ReadOnly] public ComponentLookup<CameraTargetComponent>           CameraTargetLookup;
 		[ReadOnly] public ComponentLookup<KinematicCharacterBody> KinematicCharacterBodyLookup;
 
 		private void Execute(
 			Entity                                                   entity,
-			ref OrbitCameraComponent                                 orbitCameraComponent,
-			in  OrbitCameraControl                                   cameraControl,
-			in  DynamicBuffer<OrbitCameraIgnoredEntityBufferElement> ignoredEntitiesBuffer)
+			ref CameraComponent                                 cameraComponent,
+			in  CameraControlComponent                                   cameraControlComponent,
+			in  DynamicBuffer<CameraIgnoredEntityBufferElement> ignoredEntitiesBuffer)
 		{
-			if (!OrbitCameraUtilities.TryGetCameraTargetInterpolatedWorldTransform(
-				     in cameraControl.FollowedCharacterEntity,
+			if (!CameraUtilities.TryGetCameraTargetInterpolatedWorldTransform(
+				     in cameraControlComponent.FollowedCharacterEntity,
 				     ref LocalToWorldLookup,
 				     ref CameraTargetLookup,
 				     out LocalToWorld targetWorldTransform)) return;
 			float3     worldTransformUp = targetWorldTransform.Up;
-			OrbitCameraUtilities.CalculateCameraRotation(ref worldTransformUp,
-			                                             ref orbitCameraComponent.PlanarForward,
-			                                             orbitCameraComponent.PitchAngle, out quaternion cameraRotation);
+			CameraUtilities.CalculateCameraRotation(ref worldTransformUp,
+			                                             ref cameraComponent.PlanarForward,
+			                                             cameraComponent.PitchAngle, out quaternion cameraRotation);
 
 			float3 cameraForward  = math.mul(cameraRotation, math.forward());
 			float3 targetPosition = targetWorldTransform.Position;
 
 			// Distance smoothing
-			orbitCameraComponent.SmoothedTargetDistance = math.lerp(orbitCameraComponent.SmoothedTargetDistance,
-			                                                        orbitCameraComponent.TargetDistance,
+			cameraComponent.SmoothedTargetDistance = math.lerp(cameraComponent.SmoothedTargetDistance,
+			                                                        cameraComponent.TargetDistance,
 			                                                        MathUtilities
-				                                                        .GetSharpnessInterpolant(orbitCameraComponent
+				                                                        .GetSharpnessInterpolant(cameraComponent
 						                                                         .DistanceMovementSharpness,
 					                                                         DeltaTime));
 
@@ -51,16 +51,16 @@ namespace AndrzejKebab.Jobs
 			// Obstruction detection is handled here, because we have to adjust the obstruction distance
 			// to match the interpolated physics body transform (as opposed to the "simulation" transform). Otherwise, a
 			// camera getting obstructed by a moving physics body would have visible jitter.
-			if (orbitCameraComponent.ObstructionRadius > 0f)
+			if (cameraComponent.ObstructionRadius > 0f)
 			{
-				var obstructionCheckDistance = orbitCameraComponent.SmoothedTargetDistance;
+				var obstructionCheckDistance = cameraComponent.SmoothedTargetDistance;
 
 				var collector =
-					new CameraObstructionHitsCollector(cameraControl.FollowedCharacterEntity, ignoredEntitiesBuffer,
+					new CameraObstructionHitsCollector(cameraControlComponent.FollowedCharacterEntity, ignoredEntitiesBuffer,
 					                                   cameraForward);
 				PhysicsWorld.SphereCastCustom(
 				                              targetPosition,
-				                              orbitCameraComponent.ObstructionRadius,
+				                              cameraComponent.ObstructionRadius,
 				                              -cameraForward,
 				                              obstructionCheckDistance,
 				                              ref collector,
@@ -73,7 +73,7 @@ namespace AndrzejKebab.Jobs
 					newObstructedDistance = obstructionCheckDistance * collector.ClosestHit.Fraction;
 
 					// Redo cast with the interpolated body transform to prevent FixedUpdate jitter in obstruction detection
-					if (orbitCameraComponent.PreventFixedUpdateJitter)
+					if (cameraComponent.PreventFixedUpdateJitter)
 					{
 						RigidBody hitBody = PhysicsWorld.Bodies[collector.ClosestHit.RigidBodyIndex];
 						if (LocalToWorldLookup.TryGetComponent(hitBody.Entity,
@@ -85,11 +85,11 @@ namespace AndrzejKebab.Jobs
 								                                               hitBodyLocalToWorld.Up),
 								                   hitBodyLocalToWorld.Position);
 
-							collector = new CameraObstructionHitsCollector(cameraControl.FollowedCharacterEntity,
+							collector = new CameraObstructionHitsCollector(cameraControlComponent.FollowedCharacterEntity,
 							                                               ignoredEntitiesBuffer, cameraForward);
 							hitBody.SphereCastCustom(
 							                         targetPosition,
-							                         orbitCameraComponent.ObstructionRadius,
+							                         cameraComponent.ObstructionRadius,
 							                         -cameraForward,
 							                         obstructionCheckDistance,
 							                         ref collector,
@@ -103,31 +103,31 @@ namespace AndrzejKebab.Jobs
 				}
 
 				// Update current distance based on obstructed distance
-				if (orbitCameraComponent.ObstructedDistance < newObstructedDistance)
+				if (cameraComponent.ObstructedDistance < newObstructedDistance)
 					// Move outer
-					orbitCameraComponent.ObstructedDistance = math.lerp(orbitCameraComponent.ObstructedDistance,
+					cameraComponent.ObstructedDistance = math.lerp(cameraComponent.ObstructedDistance,
 					                                                    newObstructedDistance,
 					                                                    MathUtilities
-						                                                    .GetSharpnessInterpolant(orbitCameraComponent
+						                                                    .GetSharpnessInterpolant(cameraComponent
 								                                                     .ObstructionOuterSmoothingSharpness,
 							                                                     DeltaTime));
-				else if (orbitCameraComponent.ObstructedDistance > newObstructedDistance)
+				else if (cameraComponent.ObstructedDistance > newObstructedDistance)
 					// Move inner
-					orbitCameraComponent.ObstructedDistance = math.lerp(orbitCameraComponent.ObstructedDistance,
+					cameraComponent.ObstructedDistance = math.lerp(cameraComponent.ObstructedDistance,
 					                                                    newObstructedDistance,
 					                                                    MathUtilities
-						                                                    .GetSharpnessInterpolant(orbitCameraComponent
+						                                                    .GetSharpnessInterpolant(cameraComponent
 								                                                     .ObstructionInnerSmoothingSharpness,
 							                                                     DeltaTime));
 			}
 			else
 			{
-				orbitCameraComponent.ObstructedDistance = orbitCameraComponent.SmoothedTargetDistance;
+				cameraComponent.ObstructedDistance = cameraComponent.SmoothedTargetDistance;
 			}
 
 			// Place camera at the final distance (includes smoothing and obstructions)
-			OrbitCameraUtilities.CalculateCameraPosition(ref targetPosition, ref cameraRotation,
-			                                             orbitCameraComponent.ObstructedDistance, out float3 cameraPosition);
+			CameraUtilities.CalculateCameraPosition(ref targetPosition, ref cameraRotation,
+			                                             cameraComponent.ObstructedDistance, out float3 cameraPosition);
 
 			// Write to LtW
 			LocalToWorldLookup[entity] = new LocalToWorld { Value = new float4x4(cameraRotation, cameraPosition) };

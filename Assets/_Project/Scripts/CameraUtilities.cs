@@ -8,7 +8,7 @@ using Unity.Transforms;
 namespace AndrzejKebab;
 
 [BurstCompile]
-public static class OrbitCameraUtilities
+public static class CameraUtilities
 {
 	[BurstCompile]
 	public static bool TryGetCameraTargetSimulationWorldTransform(
@@ -16,13 +16,13 @@ public static class OrbitCameraUtilities
 		ref ComponentLookup<LocalTransform>      localTransformLookup,
 		ref ComponentLookup<Parent>              parentLookup,
 		ref ComponentLookup<PostTransformMatrix> postTransformMatrixLookup,
-		ref ComponentLookup<CameraTarget>        cameraTargetLookup,
+		ref ComponentLookup<CameraTargetComponent>        cameraTargetLookup,
 		out float4x4                             worldTransform)
 	{
 		var foundValidCameraTarget = false;
 		worldTransform = float4x4.identity;
 
-		if (cameraTargetLookup.TryGetComponent(targetCharacterEntity, out CameraTarget cameraTarget) &&
+		if (cameraTargetLookup.TryGetComponent(targetCharacterEntity, out CameraTargetComponent cameraTarget) &&
 		    localTransformLookup.HasComponent(cameraTarget.TargetEntity))
 		{
 			TransformHelpers.ComputeWorldTransformMatrix(
@@ -47,14 +47,14 @@ public static class OrbitCameraUtilities
 	public static bool TryGetCameraTargetInterpolatedWorldTransform(
 		in Entity                            targetCharacterEntity,
 		ref ComponentLookup<LocalToWorld> localToWorldLookup,
-		ref ComponentLookup<CameraTarget> cameraTargetLookup,
+		ref ComponentLookup<CameraTargetComponent> cameraTargetLookup,
 		out LocalToWorld                  worldTransform)
 	{
 		var foundValidCameraTarget = false;
 		worldTransform = default;
 
 		// Get the interpolated transform of the target
-		if (cameraTargetLookup.TryGetComponent(targetCharacterEntity, out CameraTarget cameraTarget) &&
+		if (cameraTargetLookup.TryGetComponent(targetCharacterEntity, out CameraTargetComponent cameraTarget) &&
 		    localToWorldLookup.TryGetComponent(cameraTarget.TargetEntity, out worldTransform))
 			foundValidCameraTarget = true;
 		else if (localToWorldLookup.TryGetComponent(targetCharacterEntity, out worldTransform))

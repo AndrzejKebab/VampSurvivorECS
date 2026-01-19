@@ -5,7 +5,7 @@ using Unity.Mathematics;
 namespace AndrzejKebab.Components;
 
 [Serializable]
-public struct OrbitCameraControl : IComponentData
+public struct CameraControlComponent : IComponentData
 {
 	public Entity FollowedCharacterEntity;
 	public float2 LookDegreesDelta;

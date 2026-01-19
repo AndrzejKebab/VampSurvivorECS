@@ -13,17 +13,17 @@ namespace AndrzejKebab.Jobs
     public partial struct AIControlJob : IJobEntity
     {
         [ReadOnly] public PhysicsWorld                                   PhysicsWorld;
-        [ReadOnly] public ComponentLookup<ThirdPersonCharacterComponent> CharacterLookup;
+        [ReadOnly] public ComponentLookup<CharacterComponent> CharacterLookup;
         [ReadOnly] public ComponentLookup<AIControllerComponent>         AILookup;
         [ReadOnly] public ComponentLookup<LocalTransform>                TransformLookup;
         [ReadOnly] public ComponentLookup<IsDeadTag>                     DeadLookup;
         
-        private void Execute(Entity entity, ref ThirdPersonCharacterControl control, in AIControllerComponent ai,
+        private void Execute(Entity entity, ref CharacterControlComponent controlComponent, in AIControllerComponent ai,
                              in  LocalTransform              transform)
         {
             if (DeadLookup.HasComponent(entity))
             {
-                control.MoveVector = float3.zero;
+                controlComponent.MoveVector = float3.zero;
                 return;
             }
             var distanceHits = new NativeList<DistanceHit>(Allocator.Temp);
@@ -58,11 +58,11 @@ namespace AndrzejKebab.Jobs
             if (selectedTarget != Entity.Null)
             {
                 float3 targetPos = TransformLookup[selectedTarget].Position;
-                control.MoveVector = math.normalizesafe(targetPos - transform.Position);
+                controlComponent.MoveVector = math.normalizesafe(targetPos - transform.Position);
             }
             else
             {
-                control.MoveVector = float3.zero;
+                controlComponent.MoveVector = float3.zero;
             }
 
             distanceHits.Dispose();

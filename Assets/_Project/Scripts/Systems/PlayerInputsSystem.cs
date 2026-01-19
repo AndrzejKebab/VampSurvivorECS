@@ -7,20 +7,20 @@ namespace AndrzejKebab.Systems
 {
 	[UpdateInGroup(typeof(SimulationSystemGroup), OrderFirst = true)]
 	[UpdateBefore(typeof(FixedStepSimulationSystemGroup))]
-	public partial class ThirdPersonPlayerInputsSystem : SystemBase
+	public partial class PlayerInputsSystem : SystemBase
 	{
 		protected override void OnCreate()
 		{
 			RequireForUpdate<FixedTickSystem.Singleton>();
-			RequireForUpdate(SystemAPI.QueryBuilder().WithAll<ThirdPersonPlayer, ThirdPersonPlayerInputs>().Build());
+			RequireForUpdate(SystemAPI.QueryBuilder().WithAll<PlayerComponent, PlayerInputsComponent>().Build());
 		}
 
 		protected override void OnUpdate()
 		{
 			var tick = SystemAPI.GetSingleton<FixedTickSystem.Singleton>().Tick;
 
-			foreach ((RefRW<ThirdPersonPlayerInputs> playerInputs, RefRO<ThirdPersonPlayer> _) in SystemAPI
-				         .Query<RefRW<ThirdPersonPlayerInputs>, RefRO<ThirdPersonPlayer>>())
+			foreach ((RefRW<PlayerInputsComponent> playerInputs, RefRO<PlayerComponent> _) in SystemAPI
+				         .Query<RefRW<PlayerInputsComponent>, RefRO<PlayerComponent>>())
 			{
 				playerInputs.ValueRW.MoveInput = new float2
 				                                 {

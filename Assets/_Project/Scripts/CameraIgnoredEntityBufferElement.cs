@@ -4,7 +4,7 @@ using Unity.Entities;
 namespace AndrzejKebab;
 
 [Serializable]
-public struct OrbitCameraIgnoredEntityBufferElement : IBufferElementData
+public struct CameraIgnoredEntityBufferElement : IBufferElementData
 {
     public Entity Entity;
 }

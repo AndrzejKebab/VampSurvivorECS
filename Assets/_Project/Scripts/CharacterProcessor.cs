@@ -6,16 +6,16 @@ using Unity.Physics;
 
 namespace AndrzejKebab
 {
-    public struct ThirdPersonCharacterProcessor : IKinematicCharacterProcessor<ThirdPersonCharacterUpdateContext>
+    public struct CharacterProcessor : IKinematicCharacterProcessor<CharacterUpdateContext>
     {
         public KinematicCharacterDataAccess         CharacterDataAccess;
-        public RefRW<ThirdPersonCharacterComponent> CharacterComponent;
-        public RefRW<ThirdPersonCharacterControl>   CharacterControl;
+        public RefRW<CharacterComponent> CharacterComponent;
+        public RefRW<CharacterControlComponent>   CharacterControl;
 
-        public void PhysicsUpdate(ref ThirdPersonCharacterUpdateContext context,
+        public void PhysicsUpdate(ref CharacterUpdateContext context,
                                   ref KinematicCharacterUpdateContext   baseContext)
         {
-            ref ThirdPersonCharacterComponent characterComponent = ref CharacterComponent.ValueRW;
+            ref CharacterComponent characterComponent = ref CharacterComponent.ValueRW;
             ref KinematicCharacterBody characterBody = ref CharacterDataAccess.CharacterBody.ValueRW;
             ref float3 characterPosition = ref CharacterDataAccess.LocalTransform.ValueRW.Position;
 
@@ -107,19 +107,19 @@ namespace AndrzejKebab
                                                                             CharacterDataAccess.StatefulHitsBuffer);
         }
 
-        void HandleVelocityControl(ref ThirdPersonCharacterUpdateContext context,
+        void HandleVelocityControl(ref CharacterUpdateContext context,
                                    ref KinematicCharacterUpdateContext   baseContext)
         {
             float                             deltaTime          = baseContext.Time.DeltaTime;
             ref KinematicCharacterBody        characterBody      = ref CharacterDataAccess.CharacterBody.ValueRW;
-            ref ThirdPersonCharacterComponent characterComponent = ref CharacterComponent.ValueRW;
-            ref ThirdPersonCharacterControl   characterControl   = ref CharacterControl.ValueRW;
+            ref CharacterComponent characterComponent = ref CharacterComponent.ValueRW;
+            ref CharacterControlComponent   characterControlComponent   = ref CharacterControl.ValueRW;
 
             // Rotate move input and velocity to take into account parent rotation
             if (characterBody.ParentEntity != Entity.Null)
             {
-                characterControl.MoveVector =
-                    math.rotate(characterBody.RotationFromParent, characterControl.MoveVector);
+                characterControlComponent.MoveVector =
+                    math.rotate(characterBody.RotationFromParent, characterControlComponent.MoveVector);
                 characterBody.RelativeVelocity =
                     math.rotate(characterBody.RotationFromParent, characterBody.RelativeVelocity);
             }
@@ -127,7 +127,7 @@ namespace AndrzejKebab
             if (characterBody.IsGrounded)
             {
                 // Move on ground
-                float3 targetVelocity = characterControl.MoveVector * characterComponent.GroundMaxSpeed;
+                float3 targetVelocity = characterControlComponent.MoveVector * characterComponent.GroundMaxSpeed;
                 CharacterControlUtilities.StandardGroundMove_Interpolated(ref characterBody.RelativeVelocity,
                                                                           targetVelocity,
                                                                           characterComponent.GroundedMovementSharpness,
@@ -135,7 +135,7 @@ namespace AndrzejKebab
                                                                           characterBody.GroundHit.Normal);
 
                 // Jump
-                if (characterControl.Jump)
+                if (characterControlComponent.Jump)
                 {
                     CharacterControlUtilities.StandardJump(ref characterBody,
                                                            characterBody.GroundingUp * characterComponent.JumpSpeed,
@@ -145,7 +145,7 @@ namespace AndrzejKebab
             else
             {
                 // Move in air
-                float3 airAcceleration = characterControl.MoveVector * characterComponent.AirAcceleration;
+                float3 airAcceleration = characterControlComponent.MoveVector * characterComponent.AirAcceleration;
                 if (math.lengthsq(airAcceleration) > 0f)
                 {
                     float3 tmpVelocity = characterBody.RelativeVelocity;
@@ -180,12 +180,12 @@ namespace AndrzejKebab
             }
         }
 
-        public void VariableUpdate(ref ThirdPersonCharacterUpdateContext context,
+        public void VariableUpdate(ref CharacterUpdateContext context,
                                    ref KinematicCharacterUpdateContext   baseContext)
         {
             ref KinematicCharacterBody characterBody = ref CharacterDataAccess.CharacterBody.ValueRW;
-            ref ThirdPersonCharacterComponent characterComponent = ref CharacterComponent.ValueRW;
-            ref ThirdPersonCharacterControl characterControl = ref CharacterControl.ValueRW;
+            ref CharacterComponent characterComponent = ref CharacterComponent.ValueRW;
+            ref CharacterControlComponent characterControlComponent = ref CharacterControl.ValueRW;
             ref quaternion characterRotation = ref CharacterDataAccess.LocalTransform.ValueRW.Rotation;
 
             // Add rotation from parent body to the character rotation
@@ -195,11 +195,11 @@ namespace AndrzejKebab
              characterBody.LastPhysicsUpdateDeltaTime);
 
             // Rotate towards move direction
-            if (math.lengthsq(characterControl.MoveVector) > 0f)
+            if (math.lengthsq(characterControlComponent.MoveVector) > 0f)
             {
                 CharacterControlUtilities.SlerpRotationTowardsDirectionAroundUp(ref characterRotation,
                                                                                 baseContext.Time.DeltaTime,
-                                                                                math.normalizesafe(characterControl
+                                                                                math.normalizesafe(characterControlComponent
                                                                                     .MoveVector),
                                                                                 MathUtilities
                                                                                     .GetUpFromRotation(characterRotation),
@@ -209,7 +209,7 @@ namespace AndrzejKebab
 
         #region Character Processor Callbacks
 
-        public void UpdateGroundingUp(ref ThirdPersonCharacterUpdateContext context,
+        public void UpdateGroundingUp(ref CharacterUpdateContext context,
                                       ref KinematicCharacterUpdateContext   baseContext)
         {
             ref KinematicCharacterBody characterBody = ref CharacterDataAccess.CharacterBody.ValueRW;
@@ -220,7 +220,7 @@ namespace AndrzejKebab
         }
 
         public bool CanCollideWithHit(
-            ref ThirdPersonCharacterUpdateContext context,
+            ref CharacterUpdateContext context,
             ref KinematicCharacterUpdateContext   baseContext,
             in  BasicHit                          hit)
         {
@@ -228,12 +228,12 @@ namespace AndrzejKebab
         }
 
         public bool IsGroundedOnHit(
-            ref ThirdPersonCharacterUpdateContext context,
+            ref CharacterUpdateContext context,
             ref KinematicCharacterUpdateContext   baseContext,
             in  BasicHit                          hit,
             int                                   groundingEvaluationType)
         {
-            ThirdPersonCharacterComponent characterComponent = CharacterComponent.ValueRO;
+            CharacterComponent characterComponent = CharacterComponent.ValueRO;
 
             return KinematicCharacterUtilities.Default_IsGroundedOnHit(
                                                                        in this,
@@ -249,7 +249,7 @@ namespace AndrzejKebab
         }
 
         public void OnMovementHit(
-            ref ThirdPersonCharacterUpdateContext context,
+            ref CharacterUpdateContext context,
             ref KinematicCharacterUpdateContext   baseContext,
             ref KinematicCharacterHit             hit,
             ref float3                            remainingMovementDirection,
@@ -259,7 +259,7 @@ namespace AndrzejKebab
         {
             ref KinematicCharacterBody    characterBody      = ref CharacterDataAccess.CharacterBody.ValueRW;
             ref float3                    characterPosition  = ref CharacterDataAccess.LocalTransform.ValueRW.Position;
-            ThirdPersonCharacterComponent characterComponent = CharacterComponent.ValueRO;
+            CharacterComponent characterComponent = CharacterComponent.ValueRO;
 
             KinematicCharacterUtilities.Default_OnMovementHit(
                                                               in this,
@@ -284,7 +284,7 @@ namespace AndrzejKebab
         }
 
         public void OverrideDynamicHitMasses(
-            ref ThirdPersonCharacterUpdateContext context,
+            ref CharacterUpdateContext context,
             ref KinematicCharacterUpdateContext   baseContext,
             ref PhysicsMass                       characterMass,
             ref PhysicsMass                       otherMass,
@@ -294,7 +294,7 @@ namespace AndrzejKebab
         }
 
         public void ProjectVelocityOnHits(
-            ref ThirdPersonCharacterUpdateContext             context,
+            ref CharacterUpdateContext             context,
             ref KinematicCharacterUpdateContext               baseContext,
             ref float3                                        velocity,
             ref bool                                          characterIsGrounded,
@@ -302,7 +302,7 @@ namespace AndrzejKebab
             in  DynamicBuffer<KinematicVelocityProjectionHit> velocityProjectionHits,
             float3                                            originalVelocityDirection)
         {
-            ThirdPersonCharacterComponent characterComponent = CharacterComponent.ValueRO;
+            CharacterComponent characterComponent = CharacterComponent.ValueRO;
 
             KinematicCharacterUtilities.Default_ProjectVelocityOnHits(
                                                                       ref velocity,

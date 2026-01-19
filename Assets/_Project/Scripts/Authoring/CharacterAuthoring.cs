@@ -7,7 +7,7 @@ using UnityEngine;
 namespace AndrzejKebab.Authoring;
 
 [DisallowMultipleComponent]
-public class ThirdPersonCharacterAuthoring : MonoBehaviour
+public class CharacterAuthoring : MonoBehaviour
 {
     public AuthoringKinematicCharacterProperties CharacterProperties = AuthoringKinematicCharacterProperties.GetDefault();
 
@@ -22,15 +22,15 @@ public class ThirdPersonCharacterAuthoring : MonoBehaviour
     public bool                                PreventAirAccelerationAgainstUngroundedHits = true;
     public BasicStepAndSlopeHandlingParameters StepAndSlopeHandling                        = BasicStepAndSlopeHandlingParameters.GetDefault();
 
-    public class Baker : Baker<ThirdPersonCharacterAuthoring>
+    public class Baker : Baker<CharacterAuthoring>
     {
-        public override void Bake(ThirdPersonCharacterAuthoring authoring)
+        public override void Bake(CharacterAuthoring authoring)
         {
             KinematicCharacterUtilities.BakeCharacter(this, authoring.gameObject, authoring.CharacterProperties);
 
             Entity entity = GetEntity(TransformUsageFlags.Dynamic | TransformUsageFlags.WorldSpace);
 
-            AddComponent(entity, new ThirdPersonCharacterComponent
+            AddComponent(entity, new CharacterComponent
                                  {
                                      RotationSharpness                           = authoring.RotationSharpness,
                                      GroundMaxSpeed                              = authoring.GroundMaxSpeed,
@@ -43,7 +43,7 @@ public class ThirdPersonCharacterAuthoring : MonoBehaviour
                                      PreventAirAccelerationAgainstUngroundedHits = authoring.PreventAirAccelerationAgainstUngroundedHits,
                                      StepAndSlopeHandling                        = authoring.StepAndSlopeHandling,
                                  });
-            AddComponent(entity, new ThirdPersonCharacterControl());
+            AddComponent(entity, new CharacterControlComponent());
         }
     }
 

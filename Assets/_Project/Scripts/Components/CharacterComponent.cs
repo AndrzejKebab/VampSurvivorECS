@@ -6,7 +6,7 @@ using Unity.Mathematics;
 namespace AndrzejKebab.Components;
 
 [Serializable]
-public struct ThirdPersonCharacterComponent : IComponentData
+public struct CharacterComponent : IComponentData
 {
     public float                               RotationSharpness;
     public float                               GroundMaxSpeed;

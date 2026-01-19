@@ -2,7 +2,7 @@
 
 namespace AndrzejKebab;
 
-public struct ThirdPersonCharacterUpdateContext
+public struct CharacterUpdateContext
 {
 	// Here, you may add additional global data for your character updates, such as ComponentLookups, Singletons, NativeCollections, etc...
 	// The data you add here will be accessible in your character updates and all of your character "callbacks".
